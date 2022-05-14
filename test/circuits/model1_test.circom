@@ -10,7 +10,7 @@ template model1() {
     signal output out;
 
     component Dense32 = Dense(3,2);
-    component relu = ReLU(2,1);
+    component relu[2];
     component Dense21 = Dense(2,1);
 
     for (var i=0; i<3; i++) {
@@ -25,11 +25,12 @@ template model1() {
     }
 
     for (var i=0; i<2; i++) {
-        relu.in[i][0] <== Dense32.out[i];
+        relu[i] = ReLU();
+        relu[i].in <== Dense32.out[i];
     }
 
     for (var i=0; i<2; i++) {
-        Dense21.in[i] <== relu.out[i][0];
+        Dense21.in[i] <== relu[i].out;
         Dense21.weights[i][0] <== Dense21weights[i][0];
     }
     
