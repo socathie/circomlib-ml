@@ -1,6 +1,6 @@
 pragma circom 2.0.3;
 
-include "../node_modules/circomlib-matrix/circuits/matMul.circom";
+include "./circomlib-matrix/matMul.circom";
 // Dense layer
 template Dense (nInputs,nOutputs) {
     signal input in[nInputs];

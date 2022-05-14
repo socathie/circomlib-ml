@@ -2,8 +2,8 @@
 
 pragma circom 2.0.3;
 
-include "../node_modules/circomlib/circuits/comparators.circom";
-include "../node_modules/circomlib/circuits/switcher.circom";
+include "./circomlib/comparators.circom";
+include "./circomlib/switcher.circom";
 
 template ArgMax (n) {
     signal input in[n];

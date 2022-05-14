@@ -1,6 +1,6 @@
 pragma circom 2.0.3;
 
-include "util.circom";
+include "./util.circom";
 
 // ReLU layer
 template ReLU () {

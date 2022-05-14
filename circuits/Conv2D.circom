@@ -1,7 +1,7 @@
 pragma circom 2.0.3;
 
-include "../node_modules/circomlib-matrix/circuits/matElemMul.circom";
-include "../node_modules/circomlib-matrix/circuits/matElemSum.circom";
+include "./circomlib-matrix/matElemMul.circom";
+include "./circomlib-matrix/matElemSum.circom";
 include "./util.circom";
 
 // Conv2D layer

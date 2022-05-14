@@ -1,7 +1,7 @@
 pragma circom 2.0.3;
 
-include "../node_modules/circomlib/circuits/Sign.circom";
-include "../node_modules/circomlib/circuits/bitify.circom";
+include "./circomlib/sign.circom";
+include "./circomlib/bitify.circom";
 
 template IsNegative() {
     signal input in;
