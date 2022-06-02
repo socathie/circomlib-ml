@@ -10,16 +10,16 @@ const Fr = new F1Field(exports.p);
 
 const assert = chai.assert;
 
-const json = require("../models/mnist_input.json");
+const json = require("../models/mnist_poly_input.json");
 
-describe("mnist test", function () {
+describe("mnist poly test", function () {
     this.timeout(100000000);
 
     it("should return correct output", async () => {
-        const circuit = await wasm_tester(path.join(__dirname, "circuits", "mnist_test.circom"));
+        const circuit = await wasm_tester(path.join(__dirname, "circuits", "mnist_poly_test.circom"));
         await circuit.loadConstraints();
-        assert.equal(circuit.nVars, 371086);
-        assert.equal(circuit.constraints.length, 364883);
+        assert.equal(circuit.nVars, 23622);
+        assert.equal(circuit.constraints.length, 16067);
 
         const conv2d_weights = [];
         const conv2d_bias = [];

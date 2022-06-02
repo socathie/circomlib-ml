@@ -18,7 +18,7 @@ template ArgMax (n) {
     maxs[0] <== in[0];
     amaxs[0] <== 0;
     for(var i = 0; i < n; i++) {
-        gts[i] = GreaterThan(30);
+        gts[i] = GreaterThan(252); // changed to 252 (maximum) for better compatibility
         switchers[i+1] = Switcher();
         aswitchers[i+1] = Switcher();
 
