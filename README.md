@@ -32,7 +32,7 @@ In `models/mnist_poly.ipynb`, a sample model of Conv2d-Poly-Dense layers was tra
 - Weights in the `Dense` layer were scaled by `10**9` time for precision again.
 - Biases in the `Dense` layer had been omitted for simplcity, since `ArgMax` layer is not affected by the biases. However, if the biases were to be included (for example in a deeper network as an intermediate layer), they would have to be scaled by `(10**9)**5=10**45` times to adjust correctly.
 
-We can easily see that a deeper network would have to sacrifice precision, due to the limitation that Circom works under a finite field of modulo `p` which is around 254 bits. As `log(2**254)~76`, we need to make sure total scaling do not aggregate to exceed `10**76` (or even less) times. On average, a network with `l` layers should be scaled by less than or equal to `76//l` times.
+We can easily see that a deeper network would have to sacrifice precision, due to the limitation that Circom works under a finite field of modulo `p` which is around 254 bits. As `log(2**254)~76`, we need to make sure total scaling do not aggregate to exceed `10**76` (or even less) times. On average, a network with `l` layers should be scaled by less than or equal to `10**(76//l)` times.
 
-## Circuits to be added:
-- max/sum-pooling
+## TODO:
+- add strides parameter to `Conv2D` and `SumPooling2D`

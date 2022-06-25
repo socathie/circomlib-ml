@@ -4,7 +4,7 @@ include "./circomlib-matrix/matElemMul.circom";
 include "./circomlib-matrix/matElemSum.circom";
 include "./util.circom";
 
-// Conv2D layer
+// Conv2D layer with strides=0
 template Conv2D (nRows, nCols, nChannels, nFilters, kernelSize) {
     signal input in[nRows][nCols][nChannels];
     signal input weights[kernelSize][kernelSize][nChannels][nFilters];
