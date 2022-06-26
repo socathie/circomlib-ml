@@ -17,9 +17,9 @@ describe("mnist test", function () {
 
     it("should return correct output", async () => {
         const circuit = await wasm_tester(path.join(__dirname, "circuits", "mnist_test.circom"));
-        await circuit.loadConstraints();
-        assert.equal(circuit.nVars, 371086);
-        assert.equal(circuit.constraints.length, 364883);
+        //await circuit.loadConstraints();
+        //assert.equal(circuit.nVars, 371086);
+        //assert.equal(circuit.constraints.length, 364883);
 
         const conv2d_weights = [];
         const conv2d_bias = [];

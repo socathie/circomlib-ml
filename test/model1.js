@@ -18,9 +18,9 @@ describe("model1 test", function () {
 
     it("should return correct output", async () => {
         const circuit = await wasm_tester(path.join(__dirname, "circuits", "model1_test.circom"));
-        await circuit.loadConstraints();
-        assert.equal(circuit.nVars, 1050);
-        assert.equal(circuit.constraints.length, 1042);
+        //await circuit.loadConstraints();
+        //assert.equal(circuit.nVars, 1050);
+        //assert.equal(circuit.constraints.length, 1042);
 
         const Dense32weights = [];
         const Dense21weights = []
