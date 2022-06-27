@@ -16,10 +16,10 @@ template mnist_convnet() {
     signal input dense_bias[10];
     signal output out;
 
-    component conv2d_1 = Conv2D(28,28,1,4,3);
+    component conv2d_1 = Conv2D(28,28,1,4,3,1);
     component poly_1[26][26][4];
     component sum2d_1 = SumPooling2D(26,26,4,2);
-    component conv2d_2 = Conv2D(13,13,4,8,3);
+    component conv2d_2 = Conv2D(13,13,4,8,3,1);
     component poly_2[11][11][8];
     component sum2d_2 = SumPooling2D(11,11,8,2);
     component dense = Dense(200,10);

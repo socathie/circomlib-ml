@@ -13,7 +13,7 @@ template mnist() {
     signal input dense_bias[10];
     signal output out;
 
-    component conv2d = Conv2D(28,28,1,1,3);
+    component conv2d = Conv2D(28,28,1,1,3,1);
     component relu[26*26];
     component dense = Dense(676,10);
     component argmax = ArgMax(10);
