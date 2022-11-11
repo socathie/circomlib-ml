@@ -1,6 +1,6 @@
 pragma circom 2.0.3;
 
-// Conv2D layer with valid padding
+// Flatten layer with that accepts a 2D input
 template Flatten2D (nRows, nCols, nChannels) {
     signal input in[nRows][nCols][nChannels];
     signal output out[nRows*nCols*nChannels];

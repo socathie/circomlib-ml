@@ -11,13 +11,16 @@ const Fr = new F1Field(exports.p);
 
 const assert = chai.assert;
 
-const json = require("../models/sumPooling2D_input.json");
-const OUTPUT = require("../models/sumPooling2D_output.json");
+
 
 describe("SumPooling2D layer test", function () {
     this.timeout(100000000);
 
+    // SumPooling with strides==poolSize
     it("(5,5,3) -> (2,2,3)", async () => {
+        const json = require("../models/sumPooling2D_input.json");
+        const OUTPUT = require("../models/sumPooling2D_output.json");
+
         const circuit = await wasm_tester(path.join(__dirname, "circuits", "SumPooling2D_test.circom"));
         //await circuit.loadConstraints();
         //assert.equal(circuit.nVars, 76);
@@ -34,6 +37,27 @@ describe("SumPooling2D layer test", function () {
         for (var i=0; i<2*2*3; i++) {
             assert((witness[i+1]-Fr.e(OUTPUT.out[i]))<Fr.e(2));
             assert((Fr.e(OUTPUT.out[i])-witness[i+1])<Fr.e(2));
+        }
+    });
+
+    // SumPooling with strides!=poolSize
+    it("(10,10,3) -> (3,3,3)", async () => {
+        const json = require("../models/sumPooling2D_stride_input.json");
+        const OUTPUT = require("../models/sumPooling2D_stride_output.json");
+
+        const circuit = await wasm_tester(path.join(__dirname, "circuits", "SumPooling2D_stride_test.circom"));
+
+        const INPUT = {
+            "in": json.in
+        }
+
+        const witness = await circuit.calculateWitness(INPUT, true);
+
+        assert(Fr.eq(Fr.e(witness[0]),Fr.e(1)));
+
+        for (var i=0; i<3*3*3; i++) {
+            assert((witness[i+1]-Fr.e(OUTPUT.out[i]))<Fr.e(3));
+            assert((Fr.e(OUTPUT.out[i])-witness[i+1])<Fr.e(3));
         }
     });
 });
