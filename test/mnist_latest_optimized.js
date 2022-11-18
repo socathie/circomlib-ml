@@ -10,13 +10,13 @@ const Fr = new F1Field(exports.p);
 
 const assert = chai.assert;
 
-const json = require("../models/mnist_latest_input.json");
+const json = require("../models/mnist_latest_optimized_input.json");
 
-describe("mnist latest test", function () {
+describe("mnist latest optimized test", function () {
     this.timeout(100000000);
 
     it("should return correct output", async () => {
-        const circuit = await wasm_tester(path.join(__dirname, "circuits", "mnist_latest_test.circom"));
+        const circuit = await wasm_tester(path.join(__dirname, "circuits", "mnist_latest_optimized_test.circom"));
         await circuit.loadConstraints();
         console.log(circuit.nVars, circuit.constraints.length);
 
