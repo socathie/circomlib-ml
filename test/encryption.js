@@ -34,7 +34,7 @@ describe("crypto circuits test", function () {
         assert(Fr.eq(Fr.e(witness[2]), Fr.e(keypair.pubKey.rawPubKey[1])));
     });
 
-    it("ecdh shared key test", async () => {
+    it("ecdh full circuit test", async () => {
         const circuit = await wasm_tester(path.join(__dirname, "circuits", "ecdh_test.circom"));
 
         const keypair = new Keypair();
@@ -142,7 +142,69 @@ describe("crypto circuits test", function () {
         assert(Fr.eq(Fr.e(witness[1]), Fr.e(plaintext)));
 
     });
-    
-    // TODO: encrypt multiple
-    // TODO: decrypt multiple
+
+    it("encrypt multiple in circom, decrypt in js", async () => {
+        const circuit = await wasm_tester(path.join(__dirname, "circuits", "encryptMultiple_test.circom"));
+
+        const keypair = new Keypair();
+        const keypair2 = new Keypair();
+
+        const ecdhSharedKey = Keypair.genEcdhSharedKey(
+            keypair.privKey,
+            keypair2.pubKey,
+        );
+
+        const plaintext = [...Array(1000).keys()];
+
+        const INPUT = {
+            'plaintext': plaintext.map(String),
+            'shared_key': ecdhSharedKey.toString(),
+        }
+
+        const witness = await circuit.calculateWitness(INPUT, true);
+
+        const ciphertext = {
+            iv: witness[1],
+            data: witness.slice(2,1002),
+        }
+
+        decryptedText = decrypt(ciphertext, ecdhSharedKey);
+
+        for (let i=0; i<1000; i++) {
+            assert(Fr.eq(Fr.e(decryptedText[i]), Fr.e(plaintext[i])));
+        }
+        
+    });
+
+    it("encrypt multiple in js, decrypt in circom", async () => {
+        const circuit = await wasm_tester(path.join(__dirname, "circuits", "decryptMultiple_test.circom"));
+
+        const keypair = new Keypair();
+        const keypair2 = new Keypair();
+
+        const ecdhSharedKey = Keypair.genEcdhSharedKey(
+            keypair.privKey,
+            keypair2.pubKey,
+        );
+
+        const plaintext = ([...Array(1000).keys()]).map(BigInt);
+
+        const ciphertext = encrypt(plaintext, ecdhSharedKey);
+
+        const INPUT = {
+            'message': [ciphertext.iv.toString(), ...ciphertext.data.map(String)],
+            'shared_key': ecdhSharedKey.toString(),
+        }
+
+        const witness = await circuit.calculateWitness(INPUT, true);
+
+        for (let i=0; i<1000; i++) {
+            assert(Fr.eq(Fr.e(witness[i+1]), Fr.e(plaintext[i])));
+        }
+
+    });
+
+    // TODO: encrypt a model
+    it("encrypt entire model in circom, decrypt in js", async () => {
+    });
 });

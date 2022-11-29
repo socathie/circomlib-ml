@@ -6,6 +6,7 @@ include "../../circuits/ArgMax.circom";
 include "../../circuits/ReLU.circom";
 include "../../circuits/AveragePooling2D.circom";
 include "../../circuits/BatchNormalization2D.circom";
+include "../../circuits/Flatten2D.circom";
 
 template mnist_latest_optimized() {
     signal input in[28][28][1];
@@ -29,6 +30,7 @@ template mnist_latest_optimized() {
     component bn_2 = BatchNormalization2D(11,11,8);
     component relu_2[11][11][8];
     component avg2d_2 = AveragePooling2D(11,11,8,2,2,25);
+    component flatten = Flatten2D(5,5,8);
     component dense = Dense(200,10);
     component argmax = ArgMax(10);
 
@@ -107,17 +109,18 @@ template mnist_latest_optimized() {
         }
     }
 
-    var idx = 0;
-
     for (var i=0; i<5; i++) {
         for (var j=0; j<5; j++) {
             for (var k=0; k<8; k++) {
-                dense.in[idx] <== avg2d_2.out[i][j][k];
-                for (var m=0; m<10; m++) {
-                    dense.weights[idx][m] <== dense_weights[idx][m];
-                }
-                idx++;
+                flatten.in[i][j][k] <== avg2d_2.out[i][j][k];
             }
+        }
+    }
+
+    for (var i=0; i<200; i++) {
+        dense.in[i] <== flatten.out[i];
+        for (var j=0; j<10; j++) {
+            dense.weights[i][j] <== dense_weights[i][j];
         }
     }
 

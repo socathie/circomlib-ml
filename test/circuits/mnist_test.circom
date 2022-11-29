@@ -4,6 +4,7 @@ include "../../circuits/Conv2D.circom";
 include "../../circuits/Dense.circom";
 include "../../circuits/ArgMax.circom";
 include "../../circuits/ReLU.circom";
+include "../../circuits/Flatten2D.circom";
 
 template mnist() {
     signal input in[28][28][1];
@@ -14,6 +15,7 @@ template mnist() {
     signal output out;
 
     component conv2d = Conv2D(28,28,1,1,3,1);
+    component flatten = Flatten2D(26,26,1);
     component relu[26*26];
     component dense = Dense(676,10);
     component argmax = ArgMax(10);
@@ -32,17 +34,18 @@ template mnist() {
 
     conv2d.bias[0] <== conv2d_bias[0];
 
-    var idx = 0;
-
     for (var i=0; i<26; i++) {
         for (var j=0; j<26; j++) {
-            relu[idx] = ReLU();
-            relu[idx].in <== conv2d.out[i][j][0];
-            dense.in[idx] <== relu[idx].out;
-            for (var k=0; k<10; k++) {
-                dense.weights[idx][k] <== dense_weights[idx][k];
-            }
-            idx++;
+            flatten.in[i][j][0] <== conv2d.out[i][j][0];
+        }
+    }
+
+    for (var i=0; i<26*26; i++) {
+        relu[i] = ReLU();
+        relu[i].in <== flatten.out[i];
+        dense.in[i] <== relu[i].out;
+        for (var j=0; j<10; j++) {
+            dense.weights[i][j] <== dense_weights[i][j];
         }
     }
 
