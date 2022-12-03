@@ -8,7 +8,7 @@ include "../../circuits/AveragePooling2D.circom";
 include "../../circuits/BatchNormalization2D.circom";
 include "../../circuits/Flatten2D.circom";
 
-template mnist_latest_optimized() {
+template mnist_latest_precision() {
     signal input in[28][28][1];
     signal input conv2d_1_weights[3][3][1][4];
     signal input conv2d_1_bias[4];
@@ -136,4 +136,4 @@ template mnist_latest_optimized() {
     out <== argmax.out;
 }
 
-component main = mnist_latest_optimized();
+component main = mnist_latest_precision();

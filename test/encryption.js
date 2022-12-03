@@ -206,5 +206,60 @@ describe("crypto circuits test", function () {
 
     // TODO: encrypt a model
     it("encrypt entire model in circom, decrypt in js", async () => {
+        const circuit = await wasm_tester(path.join(__dirname, "circuits", "encrypted_mnist_latest_test.circom"));
+        const json = require("../models/mnist_latest_input.json");
+
+        let INPUT = {};
+        let plaintext = [
+            ...json['conv2d_1_weights'],
+            ...json['conv2d_1_bias'],
+            ...json['bn_1_a'],
+            ...json['bn_1_b'],
+            ...json['conv2d_2_weights'],
+            ...json['conv2d_2_bias'],
+            ...json['bn_2_a'],
+            ...json['bn_2_b'],
+            ...json['dense_weights'],
+            ...json['dense_bias'],
+        ];
+
+        for (const [key, value] of Object.entries(json)) {
+            if (Array.isArray(value)) {
+                let tmpArray = [];
+                for (let i = 0; i < value.flat().length; i++) {
+                    tmpArray.push(Fr.e(value.flat()[i]));
+                }
+                INPUT[key] = tmpArray;
+            } else {
+                INPUT[key] = Fr.e(value);
+            }
+        }
+
+        const keypair = new Keypair();
+        const keypair2 = new Keypair();
+
+        const ecdhSharedKey = Keypair.genEcdhSharedKey(
+            keypair.privKey,
+            keypair2.pubKey,
+        );
+
+        INPUT['shared_key'] =  ecdhSharedKey.toString();
+
+        const witness = await circuit.calculateWitness(INPUT, true);
+
+        assert(Fr.eq(Fr.e(witness[0]),Fr.e(1)));
+        assert(Fr.eq(Fr.e(witness[1]),Fr.e(7)));
+
+        const ciphertext = {
+            iv: witness[2],
+            data: witness.slice(3,2373),
+        }
+
+        decryptedText = decrypt(ciphertext, ecdhSharedKey);
+
+        for (let i=0; i<2370; i++) {
+            assert(Fr.eq(Fr.e(decryptedText[i]), Fr.e(plaintext[i])));
+        }
+        
     });
 });
