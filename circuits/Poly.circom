@@ -1,4 +1,4 @@
-pragma circom 2.0.3;
+pragma circom 2.0.0;
 
 // Poly activation layer: https://arxiv.org/abs/2011.05530
 template Poly (n) {

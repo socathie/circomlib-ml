@@ -1,4 +1,4 @@
-pragma circom 2.0.3;
+pragma circom 2.0.0;
 
 // Flatten layer with that accepts a 2D input
 template Flatten2D (nRows, nCols, nChannels) {

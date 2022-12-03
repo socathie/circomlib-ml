@@ -1,4 +1,4 @@
-pragma circom 2.0.3;
+pragma circom 2.0.0;
 
 // sum of all elements in a matrix
 template matElemSum (m,n) {

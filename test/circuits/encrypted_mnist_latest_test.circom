@@ -1,4 +1,4 @@
-pragma circom 2.0.3;
+pragma circom 2.0.0;
 
 include "../../circuits/Conv2D.circom";
 include "../../circuits/Dense.circom";
@@ -8,9 +8,9 @@ include "../../circuits/AveragePooling2D.circom";
 include "../../circuits/BatchNormalization2D.circom";
 include "../../circuits/Flatten2D.circom";
 include "../../circuits/crypto/encrypt.circom";
+include "../../circuits/crypto/ecdh.circom";
 
 template encrypted_mnist_latest() {
-    signal input shared_key;
     signal input in[28][28][1];
     signal input conv2d_1_weights[3][3][1][4];
     signal input conv2d_1_bias[4];
@@ -23,10 +23,21 @@ template encrypted_mnist_latest() {
     signal input dense_weights[200][10];
     signal input dense_bias[10];
     signal output out;
+
+    signal input private_key;
+    signal input public_key[2];
+
+    component ecdh = Ecdh();
+
+    ecdh.private_key <== private_key;
+    ecdh.public_key[0] <== public_key[0];
+    ecdh.public_key[1] <== public_key[1];
+
     signal output message[3*3*1*4+4+4+4+3*3*4*8+8+8+8+200*10+10+1];
 
     component enc = EncryptBits(3*3*1*4+4+4+4+3*3*4*8+8+8+8+200*10+10);
-    enc.shared_key <== shared_key;
+    enc.shared_key <== ecdh.shared_key;
+
     var idx = 0;
 
     component conv2d_1 = Conv2D(28,28,1,4,3,1);

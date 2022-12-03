@@ -1,4 +1,4 @@
-pragma circom 2.0.3;
+pragma circom 2.0.0;
 
 template BatchNormalization2D(nRows, nCols, nChannels) {
     signal input in[nRows][nCols][nChannels];

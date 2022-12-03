@@ -1,6 +1,6 @@
 // from 0xZKML/zk-mnist
 
-pragma circom 2.0.3;
+pragma circom 2.0.0;
 
 include "./circomlib/comparators.circom";
 include "./circomlib/switcher.circom";

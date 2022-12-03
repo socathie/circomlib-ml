@@ -243,7 +243,8 @@ describe("crypto circuits test", function () {
             keypair2.pubKey,
         );
 
-        INPUT['shared_key'] =  ecdhSharedKey.toString();
+        INPUT['private_key'] = keypair.privKey.asCircuitInputs();
+        INPUT['public_key'] = keypair2.pubKey.asCircuitInputs();
 
         const witness = await circuit.calculateWitness(INPUT, true);
 
