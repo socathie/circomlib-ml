@@ -1,6 +1,8 @@
 # Circom Circuits Library for Machine Learning
 
-Disclaimer: This package is not affiliated with circom, circomlib, or iden3.
+Run `npm run test` to test all `circomlib-ml` circuit templates.
+
+_Disclaimer: This package is not affiliated with circom, circomlib, or iden3._
 
 ## Description
 
@@ -9,12 +11,149 @@ Disclaimer: This package is not affiliated with circom, circomlib, or iden3.
 
 ## Organisation
 
-This respository contains 5 folders:
-- `circuits`: it contains the implementation of different cryptographic primitives in circom language.
-- `test`: tests.
+This respository contains 2 main folders:
+- `circuits`: all circom files containing ML templates and relevant util templates
+```bash
+circuits/
+├── ArgMax.circom
+├── AveragePooling2D.circom
+├── BatchNormalization2D.circom
+├── Conv1D.circom
+├── Conv2D.circom
+├── Dense.circom
+├── Flatten2D.circom
+├── MaxPooling2D.circom
+├── Poly.circom
+├── ReLU.circom
+├── SumPooling2D.circom
+├── circomlib
+│   ├── aliascheck.circom
+│   ├── babyjub.circom
+│   ├── binsum.circom
+│   ├── bitify.circom
+│   ├── comparators.circom
+│   ├── compconstant.circom
+│   ├── escalarmulany.circom
+│   ├── escalarmulfix.circom
+│   ├── mimc.circom
+│   ├── montgomery.circom
+│   ├── mux3.circom
+│   ├── sign.circom
+│   └── switcher.circom
+├── circomlib-matrix
+│   ├── matElemMul.circom
+│   ├── matElemSum.circom
+│   └── matMul.circom
+├── crypto
+│   ├── ecdh.circom
+│   ├── encrypt.circom
+│   └── publickey_derivation.circom
+└── util.circom
+```
+- `test`: containing all test circuits and unit tests
+```bash
+test/
+├── AveragePooling2D.js
+├── BatchNormalization.js
+├── Conv1D.js
+├── Conv2D.js
+├── Dense.js
+├── Flatten2D.js
+├── IsNegative.js
+├── IsPositive.js
+├── Max.js
+├── MaxPooling2D.js
+├── ReLU.js
+├── SumPooling2D.js
+├── circuits
+│   ├── AveragePooling2D_stride_test.circom
+│   ├── AveragePooling2D_test.circom
+│   ├── BatchNormalization_test.circom
+│   ├── Conv1D_test.circom
+│   ├── Conv2D_stride_test.circom
+│   ├── Conv2D_test.circom
+│   ├── Dense_test.circom
+│   ├── Flatten2D_test.circom
+│   ├── IsNegative_test.circom
+│   ├── IsPositive_test.circom
+│   ├── MaxPooling2D_stride_test.circom
+│   ├── MaxPooling2D_test.circom
+│   ├── Max_test.circom
+│   ├── ReLU_test.circom
+│   ├── SumPooling2D_stride_test.circom
+│   ├── SumPooling2D_test.circom
+│   ├── decryptMultiple_test.circom
+│   ├── decrypt_test.circom
+│   ├── ecdh_test.circom
+│   ├── encryptDecrypt_test.circom
+│   ├── encryptMultiple_test.circom
+│   ├── encrypt_test.circom
+│   ├── encrypted_mnist_latest_test.circom
+│   ├── mnist_convnet_test.circom
+│   ├── mnist_latest_precision_test.circom
+│   ├── mnist_latest_test.circom
+│   ├── mnist_poly_test.circom
+│   ├── mnist_test.circom
+│   ├── model1_test.circom
+│   └── publicKey_test.circom
+├── encryption.js
+├── mnist.js
+├── mnist_convnet.js
+├── mnist_latest.js
+├── mnist_latest_precision.js
+├── mnist_poly.js
+└── model1.js
+```
 
-## Polynomial activation:
-Inspired by [Ali, R. E., So, J., & Avestimehr, A. S. (2020)](https://arxiv.org/abs/2011.05530), `circuit/Poly.circom` has been addded as a template to implement `f(x)=x**2+x` as an alternative activation layer to ReLU. The non-polynomial nature of ReLU activation results in a large number of constraints per layer. By replacing ReLU with the polynomial activation `f(n,x)=x**2+n*x`, the number of constraints drastically decrease with a slight performance tradeoff. A parameter `n` is required when declaring the component to adjust for the scaling of floating-point weights and biases into integers. See below for more information.
+## Template descriptions:
+- `ArgMax.circom`
+
+    `ArgMax(n)` takes an input array of length `n` and returns an output signal correponds to the 0-based position index of the maximum element in the input.
+
+- `AveragePooling2D.circom`
+
+    `AveragePooling2D (nRows, nCols, nChannels, poolSize, strides, scaledInvPoolSize)` takes an `nRow`-by-`nCol`-by-`nChannels` input array and performs average pooling on patches of `poolSize`-by-`poolSize` with step size `strides`. `scaleInvPoolSize` must be computed separately and supplied to the template. For example, a `poolSize` of 2, should have an scale factor of `1/(2*2) = 0.25 --> 25`.
+
+- `BatchNormalization2D.circom`
+
+    `BatchNormalization2D(nRows, nCols, nChannels)` performs Batch Normalization on a 2D input array. To avoid division, parameters in the layer is parametrized into a multiplying factor `a` and constant addition `b`, i.e. `ax+b`, where
+
+    ```python
+    a = gamma/(moving_var+epsilon)**.5
+    b = beta-gamma*moving_mean/(moving_var+epsilon)**.5
+    ```
+
+- `Conv1D.circom`
+
+    1D version of `Conv2D`
+
+- `Conv2D.circom`
+
+    `Conv2D (nRows, nCols, nChannels, nFilters, kernelSize, strides)` performs 2D convolution on an `nRow`-by-`nCol`-by-`nChannels` input array with filters of `kernelSize`-by-`kernelSize` and step size of `strides`. Currently it works only for "valid" padding setting.
+
+- `Dense.circom`
+
+    `Dense (nInputs, nOutputs)` performs simple matrix multiplication on the 1D input array of length `nInputs` and weights then adds biases to the output.
+
+- `Flatten2D.circom`
+
+    `Flatten2D (nRows, nCols, nChannels)` flattens an `nRow`-by-`nCol`-by-`nChannels` input array.
+
+- `MaxPooling2D.circom`
+
+    `MaxPooling2D (nRows, nCols, nChannels, poolSize, strides)`
+
+- `Poly.circom`
+
+    Inspired by [Ali, R. E., So, J., & Avestimehr, A. S. (2020)](https://arxiv.org/abs/2011.05530), the `Poly()` template has been addded as a template to implement `f(x)=x**2+x` as an alternative activation layer to ReLU. The non-polynomial nature of ReLU activation results in a large number of constraints per layer. By replacing ReLU with the polynomial activation `f(n,x)=x**2+n*x`, the number of constraints drastically decrease with a slight performance tradeoff. A parameter `n` is required when declaring the component to adjust for the scaling of floating-point weights and biases into integers. See below for more information.
+
+- `ReLU.circom`
+
+    `ReLU()` takes a single input and performs ReLU activation, i.e. `max(0,x)`. This computation is much more expensive than `Poly()`. It's recommended to adapt your activation layers into polynomial activation to reduce the size of the final circuit.
+
+- `SumPooling2D.circom`
+
+    Essentially `AveragePooling2D` with a constant scaling of `poolSize*poolSize`. This is preferred in circom to preserve precision and reduce computation.
 
 ## Weights and biases scaling:
 - Circom only accepts integers as signals, but Tensorflow weights and biases are floating-point numbers.
@@ -33,6 +172,3 @@ In `models/mnist_poly.ipynb`, a sample model of Conv2d-Poly-Dense layers was tra
 - Biases in the `Dense` layer had been omitted for simplcity, since `ArgMax` layer is not affected by the biases. However, if the biases were to be included (for example in a deeper network as an intermediate layer), they would have to be scaled by `(10**9)**5=10**45` times to adjust correctly.
 
 We can easily see that a deeper network would have to sacrifice precision, due to the limitation that Circom works under a finite field of modulo `p` which is around 254 bits. As `log(2**254)~76`, we need to make sure total scaling do not aggregate to exceed `10**76` (or even less) times. On average, a network with `l` layers should be scaled by less than or equal to `10**(76//l)` times.
-
-## TODO:
-- add strides parameter to `Conv2D` and `SumPooling2D`

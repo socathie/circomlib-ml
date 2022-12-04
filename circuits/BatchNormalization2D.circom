@@ -1,5 +1,8 @@
 pragma circom 2.0.0;
 
+// BatchNormalization layer for 2D inputs
+// a = gamma/(moving_var+epsilon)**.5
+// b = beta-gamma*moving_mean/(moving_var+epsilon)**.5
 template BatchNormalization2D(nRows, nCols, nChannels) {
     signal input in[nRows][nCols][nChannels];
     signal input a[nChannels];
