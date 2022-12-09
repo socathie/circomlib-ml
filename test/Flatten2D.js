@@ -1,5 +1,4 @@
 const chai = require("chai");
-const { Console } = require("console");
 const path = require("path");
 
 const wasm_tester = require("circom_tester").wasm;
@@ -29,10 +28,9 @@ describe("Flatten2D layer test", function () {
         const witness = await circuit.calculateWitness(INPUT, true);
 
         assert(Fr.eq(Fr.e(witness[0]),Fr.e(1)));
-
-        for (var i=0; i<75; i++) {
-            assert((witness[i+1]-Fr.e(OUTPUT.out[i]))<Fr.e(5000));
-            assert((Fr.e(OUTPUT.out[i])-witness[i+1])<Fr.e(5000));
+        
+        for (var i=0; i<OUTPUT.out.length; i++) {
+            assert(Fr.eq(Fr.e(OUTPUT.out[i]), witness[i+1]));
         }
     });
 });

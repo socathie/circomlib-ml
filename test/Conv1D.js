@@ -1,5 +1,4 @@
 const chai = require("chai");
-const { Console } = require("console");
 const path = require("path");
 
 const wasm_tester = require("circom_tester").wasm;
@@ -41,9 +40,17 @@ describe("Conv1D layer test", function () {
 
         assert(Fr.eq(Fr.e(witness[0]),Fr.e(1)));
 
-        for (var i=0; i<6*2; i++) {
-            assert((witness[i+1]-Fr.e(OUTPUT.out[i]))<Fr.e(5000));
-            assert((Fr.e(OUTPUT.out[i])-witness[i+1])<Fr.e(5000));
+        let ape = 0;
+
+        for (var i=0; i<OUTPUT.out.length; i++) {
+            // console.log("actual", OUTPUT.out[i], "predicted", Fr.toString(witness[i+1]));
+            ape += Math.abs((OUTPUT.out[i]-parseInt(Fr.toString(witness[i+1])))/OUTPUT.out[i]);
         }
+
+        const mape = ape/OUTPUT.out.length;
+
+        console.log("mean absolute % error", mape);
+
+        assert(mape < 0.01);
     });
 });

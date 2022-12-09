@@ -1,5 +1,4 @@
 const chai = require("chai");
-const { Console } = require("console");
 const path = require("path");
 
 const wasm_tester = require("circom_tester").wasm;
@@ -22,27 +21,35 @@ describe("BatchNormalization layer test", function () {
 
         const circuit = await wasm_tester(path.join(__dirname, "circuits", "batchNormalization_test.circom"));
 
-        const a = [];
-        const b = [];
+        let INPUT = {};
 
-        for (var i=0; i<json.a.length; i++) {
-            a.push(Fr.e(json.a[i]));
-            b.push(Fr.e(json.b[i]));
-        }
-
-        const INPUT = {
-            "in": json.in,
-            "a": a,
-            "b": b
+        for (const [key, value] of Object.entries(json)) {
+            if (Array.isArray(value)) {
+                let tmpArray = [];
+                for (let i = 0; i < value.flat().length; i++) {
+                    tmpArray.push(Fr.e(value.flat()[i]));
+                }
+                INPUT[key] = tmpArray;
+            } else {
+                INPUT[key] = Fr.e(value);
+            }
         }
 
         const witness = await circuit.calculateWitness(INPUT, true);
 
         assert(Fr.eq(Fr.e(witness[0]),Fr.e(1)));
 
-        for (var i=0; i<5*5*3; i++) {
-            assert((witness[i+1]-Fr.e(OUTPUT.out[i]))<Fr.e(1000));
-            assert((Fr.e(OUTPUT.out[i])-witness[i+1])<Fr.e(1000));
+        let ape = 0;
+
+        for (var i=0; i<OUTPUT.out.length; i++) {
+            // console.log("actual", OUTPUT.out[i], "predicted", Fr.toString(witness[i+1]));
+            ape += Math.abs((OUTPUT.out[i]-parseInt(Fr.toString(witness[i+1])))/OUTPUT.out[i]);
         }
+
+        const mape = ape/OUTPUT.out.length;
+
+        console.log("mean absolute % error", mape);
+
+        assert(mape < 0.01);
     });
 });
