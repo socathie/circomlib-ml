@@ -13,6 +13,7 @@ template mnist() {
     signal input dense_weights[676][10];
     signal input dense_bias[10];
     signal output out;
+    signal output dense_out[10];
 
     component conv2d = Conv2D(28,28,1,1,3,1);
     component flatten = Flatten2D(26,26,1);
@@ -54,7 +55,7 @@ template mnist() {
     }
 
     for (var i=0; i<10; i++) {
-        log(dense.out[i]);
+        dense_out[i] <== dense.out[i];
         argmax.in[i] <== dense.out[i];
     }
 

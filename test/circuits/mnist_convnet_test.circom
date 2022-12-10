@@ -16,6 +16,7 @@ template mnist_convnet() {
     signal input dense_weights[200][10];
     signal input dense_bias[10];
     signal output out;
+    signal output dense_out[10];
 
     component conv2d_1 = Conv2D(28,28,1,4,3,1);
     component poly_1[26][26][4];
@@ -101,7 +102,7 @@ template mnist_convnet() {
     }
 
     for (var i=0; i<10; i++) {
-        log(dense.out[i]);
+        dense_out[i] <== dense.out[i];
         argmax.in[i] <== dense.out[i];
     }
 

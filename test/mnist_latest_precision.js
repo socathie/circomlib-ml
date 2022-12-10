@@ -11,6 +11,7 @@ const Fr = new F1Field(exports.p);
 const assert = chai.assert;
 
 const json = require("../models/mnist_latest_precision_input.json");
+const OUTPUT = require("../models/mnist_latest_precision_output.json");
 
 describe("mnist latest optimized test", function () {
     this.timeout(100000000);
@@ -40,5 +41,16 @@ describe("mnist latest optimized test", function () {
 
         assert(Fr.eq(Fr.e(witness[0]),Fr.e(1)));
         assert(Fr.eq(Fr.e(witness[1]),Fr.e(7)));
+
+        let ape = 0;
+
+        for (var i=0; i<OUTPUT.out.length; i++) {
+            console.log("actual", OUTPUT.out[i], "predicted", Fr.toString(witness[i+2])*OUTPUT.scale);
+            ape += Math.abs((OUTPUT.out[i]-parseInt(Fr.toString(witness[i+2]))*OUTPUT.scale)/OUTPUT.out[i]);
+        }
+
+        const mape = ape/OUTPUT.out.length;
+
+        console.log("mean absolute % error", mape);
     });
 });
