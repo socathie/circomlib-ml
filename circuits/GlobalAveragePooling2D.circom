@@ -4,7 +4,7 @@ include "./GlobalSumPooling2D.circom";
 
 // GlobalAveragePooling2D layer, might lose precision compared to GlobalSumPooling2D
 // scaledInvPoolSize is required to perform fixed point division, it is calculated as 1/(nRows*nCols) then scaled up by multiples of 10
-template GlobalAveragePooling2D (nRows, nCols, nChannels, scaledInv) {
+template GlobalAveragePooling2D (nRows, nCols, nChannels, scaledInvPoolSize) {
     signal input in[nRows][nCols][nChannels];
     signal output out[nChannels];
 
