@@ -155,6 +155,10 @@ test/
 
     Essentially `AveragePooling2D` with a constant scaling of `poolSize*poolSize`. This is preferred in circom to preserve precision and reduce computation.
 
+- `util.circom`
+
+    `IsPositive()` treats zero as a positive number for better performance. If you want to use `IsPositive()` to check if a number is strictly positive, you can use the version in the in-code comments.
+
 ## Weights and biases scaling:
 - Circom only accepts integers as signals, but Tensorflow weights and biases are floating-point numbers.
 - In order to simulate a neural network in Circom, weights must be scaled up by `10**m` times. The larger `m` is, the higher the precision.

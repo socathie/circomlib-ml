@@ -20,6 +20,29 @@ template IsNegative() {
     out <== sign.sign;
 }
 
+/* Currently, IsPositive() treats zero as a positive number for better performance. 
+   The following is the correct version which output is 1 when the signal in is a positive number, 0 when it is zero or a negative number
+
+template IsPositive() {
+    signal input in;
+    signal output out;
+
+    component num2Bits = Num2Bits(254);
+    num2Bits.in <== in;
+    component sign = Sign();
+    
+    for (var i = 0; i < 254; i++) {
+        sign.in[i] <== num2Bits.out[i];
+    }
+    
+    component isz = IsZero();
+    isz.in <== in;
+    
+
+    out <== (1 - sign.sign) * (1 - isz.out);
+}
+*/
+
 template IsPositive() {
     signal input in;
     signal output out;
