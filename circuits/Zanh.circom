@@ -16,7 +16,7 @@ template Zanh (n) {
     signal tmp;
 
     tmp <== 554670504 * n**2 - 9411195 * n * in - 14187547 * in * in;
-    log(6769816 * n**3 + in * tmp);
+    // log(6769816 * n**3 + in * tmp);
     out * (n**2) * (10**9) + remainder === 6769816 * n**3 + in * tmp;
 }
 

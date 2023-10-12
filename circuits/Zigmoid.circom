@@ -16,7 +16,7 @@ template Zigmoid (n) {
     signal tmp;
 
     tmp <== 198695283 * n**2 - 1570683 * n * in - 4001354 * in * in;
-    log(502073021 * n**3 + in * tmp);
+    // log(502073021 * n**3 + in * tmp);
     out * (n**2) * (10**9) + remainder === 502073021 * n**3 + in * tmp;
 }
 
