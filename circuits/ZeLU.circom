@@ -7,6 +7,8 @@ template ZeLU (n) {
     signal input in;
     signal input out;
     signal input remainder;
+
+    assert(remainder < n);
     
     signal tmp;
     tmp <== in * in + n*in;
