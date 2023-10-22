@@ -13,6 +13,7 @@ template Dense (nInputs, nOutputs, n) {
     component dot[nOutputs];
 
     for (var i=0; i<nOutputs; i++) {
+        assert (remainder[i] < n);
         dot[i] = matMul(1,nInputs,1);
         
         for (var j=0; j<nInputs; j++) {
