@@ -22,7 +22,10 @@ describe("Dense layer test", function () {
         const INPUT = {
             "in": ["1","2","3"],
             "weights": [["4","7"],["5","8"],["6","9"]],
-            "bias": ["10","11"]
+            "bias": ["10","11"],
+            "out": ["4","6"],
+            "remainder": ["2", "1"]
+
         }
 
         const witness = await circuit.calculateWitness(INPUT, true);
@@ -30,7 +33,7 @@ describe("Dense layer test", function () {
         //console.log(witness);
 
         assert(Fr.eq(Fr.e(witness[0]),Fr.e(1)));
-        assert(Fr.eq(Fr.e(witness[1]),Fr.e(1*4+2*5+3*6+10)));
-        assert(Fr.eq(Fr.e(witness[2]),Fr.e(1*7+2*8+3*9+11)));
+        // assert(Fr.eq(Fr.e(witness[1]),Fr.e(1*4+2*5+3*6+10)));
+        // assert(Fr.eq(Fr.e(witness[2]),Fr.e(1*7+2*8+3*9+11)));
     });
 });

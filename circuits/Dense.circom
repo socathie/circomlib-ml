@@ -2,11 +2,13 @@ pragma circom 2.0.0;
 
 include "./circomlib-matrix/matMul.circom";
 // Dense layer
-template Dense (nInputs,nOutputs) {
+// n = 10 to the power of the number of decimal places
+template Dense (nInputs, nOutputs, n) {
     signal input in[nInputs];
     signal input weights[nInputs][nOutputs];
     signal input bias[nOutputs];
-    signal output out[nOutputs];
+    signal input out[nOutputs];
+    signal input remainder[nOutputs];
 
     component dot[nOutputs];
 
@@ -18,6 +20,6 @@ template Dense (nInputs,nOutputs) {
             dot[i].b[j][0] <== weights[j][i];
         }
 
-        out[i] <== dot[i].out[0][0] + bias[i];
+        out[i] * n + remainder[i] === dot[i].out[0][0] + bias[i];
     }
 }
