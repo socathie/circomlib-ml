@@ -5,7 +5,7 @@ include "./util.circom";
 // MaxPooling2D layer
 template MaxPooling2D (nRows, nCols, nChannels, poolSize, strides) {
     signal input in[nRows][nCols][nChannels];
-    signal output out[(nRows-poolSize)\strides+1][(nCols-poolSize)\strides+1][nChannels];
+    signal input out[(nRows-poolSize)\strides+1][(nCols-poolSize)\strides+1][nChannels];
 
     component max[(nRows-poolSize)\strides+1][(nCols-poolSize)\strides+1][nChannels];
 
@@ -18,7 +18,7 @@ template MaxPooling2D (nRows, nCols, nChannels, poolSize, strides) {
                         max[i][j][k].in[x*poolSize+y] <== in[i*strides+x][j*strides+y][k];
                     }
                 }
-                out[i][j][k] <== max[i][j][k].out;
+                out[i][j][k] === max[i][j][k].out;
             }
         }
     }
