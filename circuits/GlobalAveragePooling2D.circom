@@ -3,10 +3,10 @@ pragma circom 2.0.0;
 include "./GlobalSumPooling2D.circom";
 
 // GlobalAveragePooling2D layer, might lose precision compared to GlobalSumPooling2D
-// scaledInvPoolSize is required to perform fixed point division, it is calculated as 1/(nRows*nCols) then scaled up by multiples of 10
-template GlobalAveragePooling2D (nRows, nCols, nChannels, scaledInv) {
+template GlobalAveragePooling2D (nRows, nCols, nChannels) {
     signal input in[nRows][nCols][nChannels];
-    signal output out[nChannels];
+    signal input out[nChannels];
+    signal input remainder[nChannels];
 
     component globalSumPooling2D = GlobalSumPooling2D (nRows, nCols, nChannels);
 
@@ -19,6 +19,7 @@ template GlobalAveragePooling2D (nRows, nCols, nChannels, scaledInv) {
     }
 
     for (var k=0; k<nChannels; k++) {
-        out[k] <== globalSumPooling2D.out[k]*scaledInv;
+        assert (remainder[k] < nRows*nCols);
+        out[k] * nRows * nCols + remainder[k] === globalSumPooling2D.out[k];
     }
 }
