@@ -5,11 +5,13 @@ include "./circomlib-matrix/matElemSum.circom";
 include "./util.circom";
 
 // Conv2D layer with valid padding
-template Conv2D (nRows, nCols, nChannels, nFilters, kernelSize, strides) {
+// n = 10 to the power of the number of decimal places
+template Conv2D (nRows, nCols, nChannels, nFilters, kernelSize, strides, n) {
     signal input in[nRows][nCols][nChannels];
     signal input weights[kernelSize][kernelSize][nChannels][nFilters];
     signal input bias[nFilters];
-    signal output out[(nRows-kernelSize)\strides+1][(nCols-kernelSize)\strides+1][nFilters];
+    signal input out[(nRows-kernelSize)\strides+1][(nCols-kernelSize)\strides+1][nFilters];
+    signal input remainder[(nRows-kernelSize)\strides+1][(nCols-kernelSize)\strides+1][nFilters];
 
     component mul[(nRows-kernelSize)\strides+1][(nCols-kernelSize)\strides+1][nChannels][nFilters];
     component elemSum[(nRows-kernelSize)\strides+1][(nCols-kernelSize)\strides+1][nChannels][nFilters];
@@ -35,11 +37,12 @@ template Conv2D (nRows, nCols, nChannels, nFilters, kernelSize, strides) {
                 }
             }
             for (var m=0; m<nFilters; m++) {
+                assert (remainder[i][j][m] < n);
                 sum[i][j][m] = Sum(nChannels);
                 for (var k=0; k<nChannels; k++) {
                     sum[i][j][m].in[k] <== elemSum[i][j][k][m].out;
                 }
-                out[i][j][m] <== sum[i][j][m].out + bias[m];
+                out[i][j][m] * n + remainder[i][j][m] === sum[i][j][m].out + bias[m];
             }
         }
     }
