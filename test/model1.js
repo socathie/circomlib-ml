@@ -11,7 +11,6 @@ const Fr = new F1Field(exports.p);
 const assert = chai.assert;
 
 const json = require("../models/model1_input.json");
-const OUTPUT = require("../models/model1_output.json");
 
 describe("model1 test", function () {
     this.timeout(100000000);
