@@ -1,3 +1,6 @@
+> [!WARNING]
+> README outdated and will be updated soon
+
 # Circom Circuits Library for Machine Learning
 
 Run `npm run test` to test all `circomlib-ml` circuit templates.
