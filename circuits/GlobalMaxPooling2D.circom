@@ -5,7 +5,7 @@ include "./util.circom";
 // GlobalMaxPooling2D layer
 template GlobalMaxPooling2D (nRows, nCols, nChannels) {
     signal input in[nRows][nCols][nChannels];
-    signal output out[nChannels];
+    signal input out[nChannels];
 
     component max[nChannels];
 
@@ -16,6 +16,6 @@ template GlobalMaxPooling2D (nRows, nCols, nChannels) {
                 max[k].in[i*nCols+j] <== in[i][j][k];
             }
         }
-        out[k] <== max[k].out;
+        out[k] === max[k].out;
     }
 }

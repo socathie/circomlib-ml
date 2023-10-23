@@ -5,11 +5,13 @@ include "./circomlib-matrix/matElemSum.circom";
 include "./util.circom";
 
 // Conv1D layer with valid padding
-template Conv1D (nInputs, nChannels, nFilters, kernelSize, strides) {
+// n = 10 to the power of the number of decimal places
+template Conv1D (nInputs, nChannels, nFilters, kernelSize, strides, n) {
     signal input in[nInputs][nChannels];
     signal input weights[kernelSize][nChannels][nFilters];
     signal input bias[nFilters];
-    signal output out[(nInputs-kernelSize)\strides+1][nFilters];
+    signal input out[(nInputs-kernelSize)\strides+1][nFilters];
+    signal input remainder[(nInputs-kernelSize)\strides+1][nFilters];
 
     component mul[(nInputs-kernelSize)\strides+1][nChannels][nFilters];
     component elemSum[(nInputs-kernelSize)\strides+1][nChannels][nFilters];
@@ -30,11 +32,12 @@ template Conv1D (nInputs, nChannels, nFilters, kernelSize, strides) {
             }
         }
         for (var k=0; k<nFilters; k++) {
+            assert (remainder[i][k] < n);
             sum[i][k] = Sum(nChannels);
             for (var j=0; j<nChannels; j++) {
                 sum[i][k].in[j] <== elemSum[i][j][k].out;
             }
-            out[i][k] <== sum[i][k].out + bias[k];
+            out[i][k] * n + remainder[i][k] === sum[i][k].out + bias[k];
         }
     }
 }

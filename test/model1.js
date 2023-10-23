@@ -10,41 +10,30 @@ const Fr = new F1Field(exports.p);
 
 const assert = chai.assert;
 
-const json = require("../models/model1_input.json");
-const OUTPUT = require("../models/model1_output.json");
+const INPUT = require("../models/model1_input.json");
 
 describe("model1 test", function () {
     this.timeout(100000000);
 
     it("should return correct output", async () => {
         const circuit = await wasm_tester(path.join(__dirname, "circuits", "model1_test.circom"));
-        //await circuit.loadConstraints();
-        //assert.equal(circuit.nVars, 1050);
-        //assert.equal(circuit.constraints.length, 1042);
 
-        const Dense32weights = [];
-        const Dense21weights = []
-
-        for (var i=0; i<json.Dense32weights.length; i++) {
-            Dense32weights.push(Fr.e(json.Dense32weights[i]));
-        }
-
-        for (var i=0; i<json.Dense21weights.length; i++) {
-            Dense21weights.push(Fr.e(json.Dense21weights[i]));
-        }
-
-        const INPUT = {
-            "in": json.in,
-            "Dense32weights": Dense32weights,
-            "Dense21weights": Dense21weights
-        }
+        // const INPUT = {
+        //     "in": json.in,
+        //     "Dense32weights": json.Dense32weights,
+        //     "Dense32bias": json.Dense32bias,
+        //     "Dense32out": json.Dense32out,
+        //     "Dense32remainder": json.Dense32remainder,
+        //     "ReLUout": json.ReLUout,
+        //     "Dense21weights": json.Dense21weights,
+        //     "Dense21bias": json.Dense21bias,
+        //     "Dense21out": json.Dense21out,
+        //     "Dense21remainder": json.Dense21remainder,
+        // }
 
         const witness = await circuit.calculateWitness(INPUT, true);
 
-        //console.log(witness[1]);
-
         assert(Fr.eq(Fr.e(witness[0]),Fr.e(1)));
-        assert((witness[1]-Fr.e(OUTPUT.out[0]))<Fr.e(1000000));
-        assert((Fr.e(OUTPUT.out[0])-witness[1])<Fr.e(1000000));
+        assert(Fr.eq(witness[1],Fr.e(INPUT.Dense21out[0])));
     });
 });

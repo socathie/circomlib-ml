@@ -7,7 +7,9 @@ include "./circomlib/switcher.circom";
 
 template ArgMax (n) {
     signal input in[n];
-    signal output out;
+    signal input out;
+
+    assert (out < n);
     component gts[n];        // store comparators
     component switchers[n+1];  // switcher for comparing maxs
     component aswitchers[n+1]; // switcher for arg max
@@ -36,5 +38,12 @@ template ArgMax (n) {
         maxs[i+1] <== switchers[i+1].outL;
     }
 
-    out <== amaxs[n];
+    out === amaxs[n];
 }
+
+// component main { public [ out ] } = ArgMax(5);
+
+/* INPUT = {
+    "in":  ["2","3","1","5","4"],
+    "out": "3"
+} */
