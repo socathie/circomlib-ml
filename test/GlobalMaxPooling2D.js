@@ -15,22 +15,12 @@ describe("GlobalMaxPooling2D layer test", function () {
 
     // GlobalMaxPooling with strides==poolSize
     it("(5,5,3) -> (3,)", async () => {
-        const json = require("../models/globalMaxPooling2D_input.json");
-        // const OUTPUT = require("../models/globalMaxPooling2D_output.json");
+        const INPUT = require("../models/globalMaxPooling2D_input.json");
 
         const circuit = await wasm_tester(path.join(__dirname, "circuits", "GlobalMaxPooling2D_test.circom"));
-
-        const INPUT = {
-            "in": json.in,
-            "out": json.out
-        }
 
         const witness = await circuit.calculateWitness(INPUT, true);
 
         assert(Fr.eq(Fr.e(witness[0]),Fr.e(1)));
-
-        // for (var i=0; i<OUTPUT.out.length; i++) {
-        //     assert(Fr.eq(Fr.e(OUTPUT.out[i]),witness[i+1]));
-        // }
     });
 });

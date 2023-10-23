@@ -16,17 +16,9 @@ describe("Conv2D layer test", function () {
     this.timeout(100000000);
 
     it("(5,5,3) -> (3,3,2)", async () => {
-        let json = require("../models/conv2D_input.json");
+        const INPUT = require("../models/conv2D_input.json");
 
         const circuit = await wasm_tester(path.join(__dirname, "circuits", "Conv2D_test.circom"));
-        
-        const INPUT = {
-            "in": json.in,
-            "weights": json.weights,
-            "bias": json.bias,
-            "out": json.out,
-            "remainder": json.remainder
-        };
 
         const witness = await circuit.calculateWitness(INPUT, true);
 
@@ -34,17 +26,9 @@ describe("Conv2D layer test", function () {
     });
 
     it("(10,10,3) -> (3,3,2)", async () => {
-        let json = require("../models/conv2D_stride_input.json");
+        const INPUT = require("../models/conv2D_stride_input.json");
 
         const circuit = await wasm_tester(path.join(__dirname, "circuits", "Conv2D_stride_test.circom"));
-        
-        const INPUT = {
-            "in": json.in,
-            "weights": json.weights,
-            "bias": json.bias,
-            "out": json.out,
-            "remainder": json.remainder
-        };
 
         const witness = await circuit.calculateWitness(INPUT, true);
 

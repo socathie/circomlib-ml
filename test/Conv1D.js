@@ -10,21 +10,13 @@ const Fr = new F1Field(exports.p);
 
 const assert = chai.assert;
 
-const json = require("../models/conv1D_input.json");
+const INPUT = require("../models/conv1D_input.json");
 
 describe("Conv1D layer test", function () {
     this.timeout(100000000);
 
     it("(20,3) -> (6,2)", async () => {
         const circuit = await wasm_tester(path.join(__dirname, "circuits", "Conv1D_test.circom"));
-
-        const INPUT = {
-            "in": json.in,
-            "weights": json.weights,
-            "bias": json.bias,
-            "out": json.out,
-            "remainder": json.remainder
-        }
 
         const witness = await circuit.calculateWitness(INPUT, true);
 

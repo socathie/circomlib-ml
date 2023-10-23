@@ -10,23 +10,13 @@ const Fr = new F1Field(exports.p);
 
 const assert = chai.assert;
 
-
-
 describe("BatchNormalization layer test", function () {
     this.timeout(100000000);
 
     it("(5,5,3) -> (5,5,3)", async () => {
-        let json = require("../models/batchNormalization_input.json");
+        const INPUT = require("../models/batchNormalization_input.json");
 
         const circuit = await wasm_tester(path.join(__dirname, "circuits", "batchNormalization_test.circom"));
-
-        const INPUT = {
-            "in": json.in,
-            "a": json.a,
-            "b": json.b,
-            "out": json.out,
-            "remainder": json.remainder
-        }
 
         const witness = await circuit.calculateWitness(INPUT, true);
 

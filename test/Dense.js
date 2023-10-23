@@ -14,17 +14,9 @@ describe("Dense layer test", function () {
     this.timeout(100000000);
 
     it("20 nodes -> 10 nodes", async () => {
-        let json = require("../models/dense_input.json");
+        const INPUT = require("../models/dense_input.json");
 
         const circuit = await wasm_tester(path.join(__dirname, "circuits", "Dense_test.circom"));
-
-        const INPUT = {
-            "in": json.in,
-            "weights": json.weights,
-            "bias": json.bias,
-            "out": json.out,
-            "remainder": json.remainder
-        };
 
         const witness = await circuit.calculateWitness(INPUT, true);
 

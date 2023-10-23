@@ -17,15 +17,9 @@ describe("AveragePooling2D layer test", function () {
 
     // AveragePooling with strides==poolSize
     it("(5,5,3) -> (2,2,3)", async () => {
-        const json = require("../models/averagePooling2D_input.json");
+        const INPUT = require("../models/averagePooling2D_input.json");
 
         const circuit = await wasm_tester(path.join(__dirname, "circuits", "AveragePooling2D_test.circom"));
-
-        const INPUT = {
-            "in": json.in,
-            "out": json.out,
-            "remainder": json.remainder
-        }
 
         const witness = await circuit.calculateWitness(INPUT, true);
 
@@ -34,15 +28,9 @@ describe("AveragePooling2D layer test", function () {
 
     // AveragePooling with strides!=poolSize
     it("(10,10,3) -> (4,4,3)", async () => {
-        const json = require("../models/averagePooling2D_stride_input.json");
+        const INPUT = require("../models/averagePooling2D_stride_input.json");
 
         const circuit = await wasm_tester(path.join(__dirname, "circuits", "AveragePooling2D_stride_test.circom"));
-
-        const INPUT = {
-            "in": json.in,
-            "out": json.out,
-            "remainder": json.remainder
-        }
 
         const witness = await circuit.calculateWitness(INPUT, true);
 
