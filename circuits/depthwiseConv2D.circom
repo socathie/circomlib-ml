@@ -19,20 +19,15 @@ template DepthwiseConv2D (nRows, nCols, nChannels, nFilters, kernelSize, strides
     signal input in[nRows][nCols][nChannels];
     signal input weights[kernelSize][kernelSize][nFilters]; // weights are 3d because depth is 1
     signal input bias[nFilters];
-    // signal input remainder[outRows][outCols][nFilters];
+    signal input remainder[outRows][outCols][nFilters];
 
-    signal output out[outRows][outCols][nFilters];
+    signal input out[outRows][outCols][nFilters];
 
     component mul[outRows][outCols][nFilters];
     component elemSum[outRows][outCols][nFilters];
 
     var valid_groups = nFilters % nChannels;
     var filtersPerChannel = nFilters / nChannels;
-
-    log(2222222222222);
-    log(valid_groups);
-    log(filtersPerChannel);
-    log(2222222222222);
 
     signal groups;
     groups <== valid_groups;
@@ -61,14 +56,9 @@ template DepthwiseConv2D (nRows, nCols, nChannels, nFilters, kernelSize, strides
                             elemSum[row][col][filter].a[x][y] <== mul[row][col][filter].out[x][y];
                         }
                     }
-                    out[row][col][filter] <== elemSum[row][col][filter].out + bias[filter];
+                    out[row][col][filter] * n + remainder[row][col][filter] === elemSum[row][col][filter].out + bias[filter];
                 }
             }
         }
     }
 }
-
-
-// component main { public [step_in] } = Conv2D(32, 32, 3, 64, 3, 1);
-// component main = DepthwiseConv2D(34, 34, 8, 8, 3, 1);
-// component main = Conv2D(32, 32, 3);
