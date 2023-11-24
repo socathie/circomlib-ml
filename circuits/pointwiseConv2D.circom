@@ -1,23 +1,24 @@
 pragma circom 2.1.1;
 // include "./Conv2D.circom";
 
-include "./node_modules/circomlib/circuits/sign.circom";
-include "./node_modules/circomlib/circuits/bitify.circom";
-include "./node_modules/circomlib/circuits/comparators.circom";
-include "./node_modules/circomlib-matrix/circuits/matElemMul.circom";
-include "./node_modules/circomlib-matrix/circuits/matElemSum.circom";
+include "./circomlib/sign.circom";
+include "./circomlib/bitify.circom";
+include "./circomlib/comparators.circom";
+include "./circomlib-matrix/matElemMul.circom";
+include "./circomlib-matrix/matElemSum.circom";
 include "./util.circom";
 
 // Pointwise Convolution layer
 // Note that nFilters must be a multiple of nChannels
-template PointwiseConv2D (nRows, nCols, nChannels, nFilters) {
+template PointwiseConv2D (nRows, nCols, nChannels, nFilters, n) {
     var outRows = nRows; // kernel size and strides are 1
     var outCols = nCols;
 
     signal input in[nRows][nCols][nChannels];
-    signal input weights[nChannels][nFilters]; // weights are 3d because depth is 1
+    signal input weights[nChannels][nFilters]; // weights are 2d because kernel_size is 1
     signal input bias[nFilters];
-    signal output out[outRows][outCols][nFilters];
+    signal input out[outRows][outCols][nFilters];
+    signal input remainder[outRows][outCols][nFilters];
 
     component sum[outRows][outCols][nFilters];
 
@@ -28,7 +29,7 @@ template PointwiseConv2D (nRows, nCols, nChannels, nFilters) {
                 for (var channel=0; channel<nChannels; channel++) {
                     sum[row][col][filter].in[channel] <== in[row][col][channel] * weights[channel][filter];
                 }
-                out[row][col][filter] <== sum[row][col][filter].out + bias[filter];
+                out[row][col][filter] * n + remainder[row][col][filter] === sum[row][col][filter].out + bias[filter];
             }
         }
     }
