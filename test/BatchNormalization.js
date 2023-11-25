@@ -16,7 +16,7 @@ describe("BatchNormalization layer test", function () {
     it("(5,5,3) -> (5,5,3)", async () => {
         const INPUT = require("../models/batchNormalization_input.json");
 
-        const circuit = await wasm_tester(path.join(__dirname, "circuits", "batchNormalization_test.circom"));
+        const circuit = await wasm_tester(path.join(__dirname, "circuits", "BatchNormalization_test.circom"));
 
         const witness = await circuit.calculateWitness(INPUT, true);
 

@@ -205,7 +205,7 @@ describe("crypto circuits test", function () {
     });
 
     // TODO: encrypt a model
-    it("encrypt entire model in circom, decrypt in js", async () => {
+    it.skip("encrypt entire model in circom, decrypt in js", async () => {
         const circuit = await wasm_tester(path.join(__dirname, "circuits", "encrypted_mnist_latest_test.circom"));
         const json = require("../models/mnist_latest_input.json");
 

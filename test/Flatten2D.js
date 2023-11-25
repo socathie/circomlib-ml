@@ -16,7 +16,7 @@ describe("Flatten2D layer test", function () {
     it("(5,5,3) -> 75", async () => {
         const INPUT = require("../models/flatten2D_input.json");
 
-        const circuit = await wasm_tester(path.join(__dirname, "circuits", "flatten2D_test.circom"));
+        const circuit = await wasm_tester(path.join(__dirname, "circuits", "Flatten2D_test.circom"));
 
         const witness = await circuit.calculateWitness(INPUT, true);
 
