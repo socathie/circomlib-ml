@@ -10,7 +10,7 @@ const Fr = new F1Field(exports.p);
 
 const assert = chai.assert;
 
-describe.only("DepthwiseConv2D layer test", function () {
+describe("DepthwiseConv2D layer test", function () {
     this.timeout(100000000);
 
     it("(7,7,3) -> (5,5,3)", async () => {
