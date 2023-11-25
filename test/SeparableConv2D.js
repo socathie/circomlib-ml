@@ -10,13 +10,13 @@ const Fr = new F1Field(exports.p);
 
 const assert = chai.assert;
 
-describe.only("PointwiseConv2D layer test", function () {
+describe.only("SeparableConv2D layer test", function () {
     this.timeout(100000000);
 
     it("(7,7,3) -> (5,5,3)", async () => {
-        const INPUT = require("../models/pointwiseConv2D_input.json");
+        const INPUT = require("../models/separableConv2D_input.json");
 
-        const circuit = await wasm_tester(path.join(__dirname, "circuits", "PointwiseConv2D_test.circom"));
+        const circuit = await wasm_tester(path.join(__dirname, "circuits", "SeparableConv2D_test.circom"));
 
         const witness = await circuit.calculateWitness(INPUT, true);
 
