@@ -10,13 +10,13 @@ const Fr = new F1Field(exports.p);
 
 const assert = chai.assert;
 
-describe("Flatten2D layer test", function () {
+describe("PointwiseConv2D layer test", function () {
     this.timeout(100000000);
 
-    it("(5,5,3) -> 75", async () => {
-        const INPUT = require("../models/flatten2D_input.json");
+    it("(7,7,3) -> (5,5,3)", async () => {
+        const INPUT = require("../models/pointwiseConv2D_input.json");
 
-        const circuit = await wasm_tester(path.join(__dirname, "circuits", "Flatten2D_test.circom"));
+        const circuit = await wasm_tester(path.join(__dirname, "circuits", "PointwiseConv2D_test.circom"));
 
         const witness = await circuit.calculateWitness(INPUT, true);
 
