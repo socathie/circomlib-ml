@@ -1,5 +1,5 @@
 > [!WARNING]
-> README outdated and will be updated soon
+> README outdated and will be updated soon, see test folder for latest examples.
 
 # Circom Circuits Library for Machine Learning
 
