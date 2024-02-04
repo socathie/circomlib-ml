@@ -1,6 +1,6 @@
 {
   "name": "circomlib-ml",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Circuits library for machine learning in circom",
   "main": "index.js",
   "directories": {
